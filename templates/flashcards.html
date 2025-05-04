@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards from JSON</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="top-container">
+        <img src="/static/images/brain.png" alt="Study Mind Logo" class="logo">
+        <h1>Upload JSON File for Flashcards</h1>
+
+<div class="upload-container">
+    <label for="jsonFileInput" class="file-input-label">Choose JSON File</label>
+    <input type="file" id="jsonFileInput" accept=".json" onchange="showFileName()">
+    <span id="file-name" style="margin-left: 10px;"></span>
+    <button class="upload-btn" onclick="uploadJsonFile()">Upload JSON</button>
+</div>
+
+        
+        <br><br>
+
+        <div class="flashcard-container" style="display:none;">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="flashcard-front" id="question"></div>
+                <div class="flashcard-back" id="answer"></div>
+            </div>
+
+            <div style="margin-top:30px;">
+                <button onclick="prevCard()">Previous</button>
+                <button onclick="nextCard()">Next</button>
+                <p id="cardCounter" style="margin-top:10px; font-size: 18px; color: #333;"></p> <!-- Counter for cards -->
+            </div>
+        </div>
+
+        <div id="flashcardsContainer"></div> <!-- shows all cards at once -->
+    </div>
+
+    <script>
+        let flashcards = [];
+        let current = 0;
+        let flipped = false;
+
+        async function uploadJsonFile() {
+            const fileInput = document.getElementById('jsonFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    flashcards = JSON.parse(event.target.result);
+                    if (!Array.isArray(flashcards)) {
+                        alert('Invalid JSON format: Expected an array.');
+                        return;
+                    }
+                    current = 0;
+                    flipped = false;
+                    document.querySelector('.flashcard-container').style.display = 'block'; // Show flashcard UI
+                    showCard();
+                } catch (error) {
+                    alert('Failed to parse JSON: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function showCard() {
+            const card = flashcards[current];
+            document.getElementById('question').innerText = card.question || "No question";
+            document.getElementById('answer').innerText = card.answer || "No answer";
+            document.getElementById('flashcard').classList.remove('flipped'); // Reset card flip
+            flipped = false;
+            
+            document.getElementById('cardCounter').innerText = `${current + 1} of ${flashcards.length}`;
+
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            flipped = !flipped;
+        }
+
+        function nextCard() {
+            if (current < flashcards.length - 1) {
+                current++;
+                showCard();
+            }
+        }
+
+        function prevCard() {
+            if (current > 0) {
+                current--;
+                showCard();
+            }
+        }
+
+        function showFileName() {
+            const input = document.getElementById('jsonFileInput');
+            const fileNameSpan = document.getElementById('file-name');
+            fileNameSpan.textContent = input.files[0] ? input.files[0].name : '';
+  }
+    </script>
+</body>
+</html>

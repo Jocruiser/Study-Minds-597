@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Mind</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="top-container">
+    <img src="/static/images/brain.png" alt="Study Mind Logo" class="logo">
+    <h1>Study Mind</h1>
+    <p class="subtitle">UPLOAD FILE</p>
+
+    <div class="upload-container">
+        <label for="fileInput" class="file-input-label">Choose File</label>
+        <input type="file" id="fileInput" accept=".pdf, .pptx" onchange="showFileName()">
+        <span id="file-name" style="margin-left: 10px;"></span>
+        <button class="upload-btn" onclick="uploadFile()">UPLOAD</button>
+    
+        <p id="progress" style="display: none;">Uploading...</p>
+        <div id="downloadLinks" style="margin-top: 20px;"></div>
+        <p id="error" style="color: red; display: none;"></p>
+    </div>
+<br>
+<div class="upload-container">
+    <button class="upload-btn" onclick="window.location.href='/flashcards';">Generate Flashcards</button>
+</div>
+
+    </body>
+
+<br>
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            document.getElementById('progress').style.display = 'block';
+
+            try {
+                const response = await fetch('http://localhost:5000/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                document.getElementById('progress').style.display = 'none';
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const downloadLinksDiv = document.getElementById('downloadLinks');
+                    downloadLinksDiv.innerHTML = `
+                        <p>File processed successfully. Download your flashcards:</p>
+                        <a href="${data.csvUrl}" download>📄 Download CSV</a> |
+                        <a href="${data.jsonUrl}" download>📄 Download JSON</a>
+                    `;
+                    alert('File uploaded successfully. Download your flashcards below.');
+                } else {
+                    const errorData = await response.json();
+                    alert('Error: ' + errorData.error);
+                }
+            } catch (error) {
+                document.getElementById('progress').style.display = 'none';
+                alert('An error occurred: ' + error.message);
+            }
+        }
+
+                function showFileName() {
+                    const input = document.getElementById('fileInput');
+                    const fileNameSpan = document.getElementById('file-name');
+                    fileNameSpan.textContent = input.files[0] ? input.files[0].name : '';
+                }
+    </script>
+</body>
+</html>
