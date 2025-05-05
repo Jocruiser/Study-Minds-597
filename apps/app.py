@@ -1,5 +1,9 @@
-from flask import Flask, request, render_template, jsonify, send_file, redirect, url_for, session, send_from_directory
+from flask import Flask, request, render_template, jsonify, send_file, redirect, request, url_for, session, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import flash # displays errors and confirmations
 import os
 import csv
 import PyPDF2
@@ -17,6 +21,7 @@ load_dotenv()  # load from .env file
 api_key = os.getenv("OPENROUTER_API_KEY")
 app.secret_key = os.getenv("SECRET_KEY")
 
+# upload and output folders created 
 headers = {
     "Authorization": f"Bearer {api_key}",
     "Content-Type": "application/json",
@@ -72,7 +77,7 @@ def generate_flashcards_from_api(text_list):
         payload = {
             "model": "deepseek/deepseek-chat-v3-0324:free",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 200
+            "max_tokens": 150 # tokens from AI 
         }
 
         response = requests.post(api_url, headers=headers, json=payload)
@@ -118,83 +123,6 @@ def save_flashcards_as_csv(flashcards, filename):
 def save_flashcards_as_json(flashcards, filename):
     with open(filename, "w") as f:
         json.dump(flashcards, f, indent=4)
-
-@app.route("/")
-def index():
-    return render_template("index.html") # changed this from send_from_directory to render_template
-
-@app.route("/flashcards")
-def flashcards():
-    return render_template("flashcards.html")  # This should point to the flashcards page template
-
-
-@app.route("/upload", methods=["POST"])
-def upload_file():
-    if "file" not in request.files:
-        return jsonify({"error": "No file provided"}), 400
-    
-    file = request.files["file"]
-    if file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
-    
-    try:
-        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-        file.save(file_path)
-
-        # Extract text based on file type
-        if file.filename.endswith(".pdf"):
-            text_content = extract_text_from_pdf(file_path)
-        elif file.filename.endswith(".ppt") or file.filename.endswith(".pptx"):
-            text_content = extract_text_from_pptx(file_path)
-        else:
-            return jsonify({"error": "Unsupported file type"}), 400
-
-        # Generate flashcards using the API
-        flashcards = generate_flashcards_from_api(text_content)
-
-        # Save flashcards as CSV & JSON
-        csv_path = os.path.join(OUTPUT_FOLDER, "flashcards.csv")
-        json_path = os.path.join(OUTPUT_FOLDER, "flashcards.json")
-        save_flashcards_as_csv(flashcards, csv_path)
-        save_flashcards_as_json(flashcards, json_path)
-
-        return jsonify({
-            "csvUrl": "http://localhost:5000/download/csv",
-            "jsonUrl": "http://localhost:5000/download/json",
-            "flashcards": flashcards
-        })
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/upload_json", methods=["POST"])
-def upload_json_file():
-    if "file" not in request.files:
-        return jsonify({"error": "No file provided"}), 400
-    
-    file = request.files["file"]
-    if file.filename == "" or not file.filename.endswith(".json"):
-        return jsonify({"error": "Please upload a valid JSON file"}), 400
-
-    try:
-        # Read the JSON file
-        flashcards = json.load(file)
-
-        return jsonify({
-            "flashcards": flashcards  # Send back the flashcards data to the frontend
-        })
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/download/<filetype>", methods=["GET"])
-def download_file(filetype):
-    if filetype == "csv":
-        return send_file(os.path.join(OUTPUT_FOLDER, "flashcards.csv"), as_attachment=True)
-    elif filetype == "json":
-        return send_file(os.path.join(OUTPUT_FOLDER, "flashcards.json"), as_attachment=True)
-    else:
-        return jsonify({"error": "Invalid file type"}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)
