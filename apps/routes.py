@@ -33,7 +33,7 @@ def register():
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Username already exists.")
-            return redirect(url_for('auth.register'))
+            return redirect(url_for('auth.login'))
 
         new_user = User(username=username, password=hashed_pw)
         db.session.add(new_user)
