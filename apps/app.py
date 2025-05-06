@@ -71,7 +71,7 @@ def generate_flashcards_from_api(text_list):
     text_chunks = split_text_into_chunks(text_list, max_length=500)
     
     for paragraph in text_chunks:
-        prompt = f"Generate a question and answer based on this text: {paragraph}"
+        prompt = f"Generate a question and answer based on this text in flashcard format for a student prepping for a multiple choice exam: {paragraph}"
         
         
         payload = {
