@@ -4,6 +4,7 @@ from flask_login import UserMixin
 
 # Define the models
 class Flashcard(db.Model):
+    __tablename__ = 'flashcards'
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(255))
     answer = db.Column(db.String(255))
