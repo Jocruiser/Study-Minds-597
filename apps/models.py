@@ -7,7 +7,7 @@ class Flashcard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(255))
     answer = db.Column(db.String(255))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users' 
