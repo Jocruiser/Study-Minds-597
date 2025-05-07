@@ -25,7 +25,7 @@ app.secret_key = os.getenv("SECRET_KEY")
 headers = {
     "Authorization": f"Bearer {api_key}",
     "Content-Type": "application/json",
-    "HTTP-Referer": "localhost",
+    "HTTP-Referer": "http://localhost",
     "X-Title": "Flashcard Generator",  
 }
 
@@ -71,13 +71,13 @@ def generate_flashcards_from_api(text_list):
     text_chunks = split_text_into_chunks(text_list, max_length=500)
     
     for paragraph in text_chunks:
-        prompt = f"Generate a question and answer based on this text: {paragraph}"
+        prompt = f"Can you parse through the chunk of lecture text and create flashcards with a question and answer pair {paragraph}"
         
         
         payload = {
             "model": "deepseek/deepseek-chat-v3-0324:free",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 150 # tokens from AI 
+            "max_tokens": 250 # tokens from AI 
         }
 
         response = requests.post(api_url, headers=headers, json=payload)
@@ -113,15 +113,16 @@ def generate_flashcards_from_api(text_list):
 
 # Save flashcards to CSV
 def save_flashcards_as_csv(flashcards, filename):
-    with open(filename, mode="w", newline="", encoding="utf-8") as file:
+    static_path = os.path.join("static", filename)
+    with open(static_path, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        writer.writerow(["Question", "Answer"])  # Header row
+        writer.writerow(["Question", "Answer"])
         for card in flashcards:
             writer.writerow([card["question"], card["answer"]])
 
-# Save flashcards to JSON
 def save_flashcards_as_json(flashcards, filename):
-    with open(filename, "w") as f:
+    static_path = os.path.join("static", filename)
+    with open(static_path, "w", encoding="utf-8") as f:
         json.dump(flashcards, f, indent=4)
 
 if __name__ == "__main__":
