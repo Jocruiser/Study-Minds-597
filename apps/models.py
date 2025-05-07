@@ -3,6 +3,15 @@ from .db import db  # Import db from the current package
 from flask_login import UserMixin
 
 # Define the models
+<<<<<<< HEAD
+=======
+class Flashcard(db.Model):
+    __tablename__ = 'flashcards'
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String)
+    answer = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+>>>>>>> f5b40024cb3d738cf4928c2144ebda8607dd3eef
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user' 
