@@ -1,0 +1,18 @@
+[
+    {
+        "question": "What are the key activities involved in Software Configuration Management (SCM)?",
+        "answer": "The key activities in Software Configuration Management (SCM) include:  \n1. **Configuration Identification** \u2013 Identifying and defining configuration items (e.g., source code, documentation).  \n2. **Change Control** \u2013 Managing and approving changes to configuration items systematically.  \n3. **Status Accounting** \u2013 Recording and reporting the status of software artifacts throughout development.  \n4. **Configuration Aud"
+    },
+    {
+        "question": "What are the four key activities involved in Configuration Management, and briefly describe each?",
+        "answer": "The four key activities in Configuration Management are:  \n1. **Identification** \u2013 Determining which items need to be controlled.  \n2. **Change Control** \u2013 Managing modifications to configuration items systematically.  \n3. **Configuration Status Accounting** \u2013 Recording and reporting the status of configuration items.  \n4. **Configuration Audits** \u2013 Verifying that configuration items conform to requirements and"
+    },
+    {
+        "question": "What are some key benefits of Software Configuration Management (SCM), and how do Version Control Systems (VCS) contribute to these benefits?",
+        "answer": "Key benefits of SCM include:  \n1. **Improved product quality** \u2013 Ensures consistency and correctness.  \n2. **Easier maintenance** \u2013 Simplifies updates and troubleshooting.  \n3. **Better team coordination** \u2013 Enables collaborative development.  \n4. **Faster bug tracking and rollback"
+    },
+    {
+        "question": "What are some examples of version control systems mentioned in the text?",
+        "answer": "The text lists **Git**, **Subversion (SVN)**, and **Mercurial** as examples of version control systems."
+    }
+]

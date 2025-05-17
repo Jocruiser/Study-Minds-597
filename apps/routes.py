@@ -114,6 +114,7 @@ def upload_file():
         save_flashcards_as_csv(flashcards, csv_path)
         save_flashcards_as_json(flashcards, json_path)
 
+
         return jsonify({
             "csvUrl": "/download/csv",
             "jsonUrl": "/download/json",
@@ -159,7 +160,7 @@ def upload_json_file():
 
 @auth.route("/download/<filetype>", methods=["GET"])
 def download_file(filetype):
-    from flask import send_file  # imported only where used
+    from flask import send_file  
     if filetype == "csv":
         return send_file(os.path.join(OUTPUT_FOLDER, "flashcards.csv"), as_attachment=True)
     elif filetype == "json":

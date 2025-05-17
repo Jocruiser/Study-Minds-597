@@ -93,11 +93,13 @@
     
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('downloadLinks').innerHTML = `
-                        <p>Download your flashcards:</p>
-                        <a href="${data.csvUrl}" download class="btn btn-outline-primary">Download CSV</a>
-                        <a href="${data.jsonUrl}" download class="btn btn-outline-secondary ms-2">Download JSON</a>
+                    const downloadLinksDiv = document.getElementById('downloadLinks');
+                    downloadLinksDiv.innerHTML = `
+                        <p>File processed successfully. Download your flashcards:</p>
+                        <a href="${data.csvUrl}" download>📄 Download CSV</a> |
+                        <a href="${data.jsonUrl}" download>📄 Download JSON</a>
                     `;
+                    alert('File uploaded successfully. Download your flashcards below.');
                 } else {
                     const errorData = await response.json();
                     alert('Error: ' + errorData.error);

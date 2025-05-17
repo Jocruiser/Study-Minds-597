@@ -30,7 +30,7 @@ headers = {
 }
 
 UPLOAD_FOLDER = "uploads"
-OUTPUT_FOLDER = "outputs"
+OUTPUT_FOLDER = "output"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -56,7 +56,7 @@ def extract_text_from_pptx(ppt_path):
     return text_content
 
 #split text into paragraphs
-def split_text_into_chunks(text_list, max_length=500):
+def split_text_into_chunks(text_list, max_length=400):
     chunks = []
     for text in text_list:
         if len(text) > max_length:
@@ -68,7 +68,7 @@ def split_text_into_chunks(text_list, max_length=500):
 # Function to call OpenRouter API for Q&A generation
 def generate_flashcards_from_api(text_list):
     flashcards = []
-    text_chunks = split_text_into_chunks(text_list, max_length=500)
+    text_chunks = split_text_into_chunks(text_list, max_length=400)
     
     for paragraph in text_chunks:
         prompt = f"Generate a question and answer based on this text: {paragraph}"
@@ -77,7 +77,7 @@ def generate_flashcards_from_api(text_list):
         payload = {
             "model": "deepseek/deepseek-chat-v3-0324:free",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 300 # tokens from AI 
+            "max_tokens": 100 # tokens from AI 
         }
 
         response = requests.post(api_url, headers=headers, json=payload)
@@ -112,18 +112,17 @@ def generate_flashcards_from_api(text_list):
     return flashcards
 
 # Save flashcards to CSV
-def save_flashcards_as_csv(flashcards, filename):
-    static_path = os.path.join("static", filename)
-    with open(static_path, mode="w", newline="", encoding="utf-8") as file:
+def save_flashcards_as_csv(flashcards, full_path):
+    with open(full_path, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(["Question", "Answer"])
         for card in flashcards:
             writer.writerow([card["question"], card["answer"]])
 
-def save_flashcards_as_json(flashcards, filename):
-    static_path = os.path.join("static", filename)
-    with open(static_path, "w", encoding="utf-8") as f:
+def save_flashcards_as_json(flashcards, full_path):
+    with open(full_path, "w", encoding="utf-8") as f:
         json.dump(flashcards, f, indent=4)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

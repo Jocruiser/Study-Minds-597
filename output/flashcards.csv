@@ -1,0 +1,17 @@
+Question,Answer
+What are the key activities involved in Software Configuration Management (SCM)?,"The key activities in Software Configuration Management (SCM) include:  
+1. **Configuration Identification** – Identifying and defining configuration items (e.g., source code, documentation).  
+2. **Change Control** – Managing and approving changes to configuration items systematically.  
+3. **Status Accounting** – Recording and reporting the status of software artifacts throughout development.  
+4. **Configuration Aud"
+"What are the four key activities involved in Configuration Management, and briefly describe each?","The four key activities in Configuration Management are:  
+1. **Identification** – Determining which items need to be controlled.  
+2. **Change Control** – Managing modifications to configuration items systematically.  
+3. **Configuration Status Accounting** – Recording and reporting the status of configuration items.  
+4. **Configuration Audits** – Verifying that configuration items conform to requirements and"
+"What are some key benefits of Software Configuration Management (SCM), and how do Version Control Systems (VCS) contribute to these benefits?","Key benefits of SCM include:  
+1. **Improved product quality** – Ensures consistency and correctness.  
+2. **Easier maintenance** – Simplifies updates and troubleshooting.  
+3. **Better team coordination** – Enables collaborative development.  
+4. **Faster bug tracking and rollback"
+What are some examples of version control systems mentioned in the text?,"The text lists **Git**, **Subversion (SVN)**, and **Mercurial** as examples of version control systems."
