@@ -20,6 +20,6 @@ Setting an API key on OpenRouter
 
 In VS Code:
 Run (In Terminal)
-python app.py 
+python run.py 
 
 
