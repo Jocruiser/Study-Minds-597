@@ -71,13 +71,13 @@ def generate_flashcards_from_api(text_list):
     text_chunks = split_text_into_chunks(text_list, max_length=500)
     
     for paragraph in text_chunks:
-        prompt = f"Generate a question and answer based on this text in flashcard format for a student prepping for a multiple choice exam: {paragraph}"
+        prompt = f"Generate a question and answer based on this text: {paragraph}"
         
         
         payload = {
             "model": "deepseek/deepseek-chat-v3-0324:free",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 250 # tokens from AI 
+            "max_tokens": 300 # tokens from AI 
         }
 
         response = requests.post(api_url, headers=headers, json=payload)
